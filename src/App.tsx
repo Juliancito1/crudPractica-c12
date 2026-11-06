@@ -1,29 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Tarea, TareaFormData } from "./types/types";
 import { TareaForm } from "./components/TareaForm";
 import { TareasContainer } from "./components/TareasContainer";
 
+const TAREAS_STORAGE_KEY = "crudPracticaC12:tareas";
+
 function App() {
-  const [tareas, setTareas] = useState<Tarea[]>([]);
+  const [tareas, setTareas] = useState<Tarea[]>(() => {
+    const tareasGuardadas = localStorage.getItem(TAREAS_STORAGE_KEY);
+    return tareasGuardadas ? JSON.parse(tareasGuardadas) : [];
+  });
   const [tareaEditar, setTareaEditar] = useState<Tarea | null>(null);
+
+  useEffect(() => {
+    localStorage.setItem(TAREAS_STORAGE_KEY, JSON.stringify(tareas));
+  }, [tareas]);
 
   // CREATE y UPDATE
   // TODO 1: Implementar CREATE
   const guardarTarea = (data: TareaFormData) => {
-    // Completar
+    if (tareaEditar) {
+      setTareas((actuales) =>
+        actuales.map((tarea) =>
+          tarea.id === tareaEditar.id ? { ...tarea, ...data } : tarea,
+        ),
+      );
+      setTareaEditar(null);
+      return;
+    }
+
+    const nuevaTarea: Tarea = {
+      id: Date.now(),
+      titulo: data.titulo,
+      descripcion: data.descripcion,
+    };
+    setTareas((actuales) => [...actuales, nuevaTarea]);
   };
 
   // TODO 2: Implementar READ
   // Mostrar las tareas utilizando map()
 
   // TODO 3: Implementar UPDATE
-  const editarTarea = (id: number, data: TareaFormData) => {
-    // Completar
+  const editarTarea = (tarea: Tarea) => {
+    setTareaEditar(tarea);
   };
 
   // TODO 4: Implementar DELETE
   const eliminarTarea = (id: number) => {
     // Completar
+    setTareas((actuales) => actuales.filter((tarea) => tarea.id !== id));
   };
 
   // Cancelar edición

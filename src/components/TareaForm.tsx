@@ -21,23 +21,12 @@ export const TareaForm = ({
   } = useForm<TareaFormData>();
 
   // Cargar los datos cuando seleccionamos una tarea
-  useEffect(() => {
-    if (tareaEditar) {
-      reset({
-        titulo: tareaEditar.titulo,
-        descripcion: tareaEditar.descripcion,
-      });
-    } else {
-      reset({
-        titulo: "",
-        descripcion: "",
-      });
-    }
-  }, [tareaEditar, reset]);
+  
 
   const enviarFormulario = (data: TareaFormData) => {
+    console.log(data)
     onGuardar(data);
-    reset();
+    
   };
 
   return (
@@ -75,6 +64,10 @@ export const TareaForm = ({
         <textarea
           {...register("descripcion", {
             required: "La descripción es obligatoria",
+            minLength: {
+              value: 5,
+              message: "Mínimo 5 caracteres",
+            },
           })}
           className="w-full rounded-lg border border-gray-300 p-3 outline-none focus:border-indigo-500"
           placeholder="Descripción de la tarea"
