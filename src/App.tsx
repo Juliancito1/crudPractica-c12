@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 import type { Tarea, TareaFormData } from "./types/types";
 import { TareaForm } from "./components/TareaForm";
 import { TareasContainer } from "./components/TareasContainer";
@@ -25,6 +27,13 @@ function App() {
           tarea.id === tareaEditar.id ? { ...tarea, ...data } : tarea,
         ),
       );
+      void Swal.fire({
+        icon: "success",
+        title: "Tarea actualizada",
+        text: `"${data.titulo}" se guardó correctamente.`,
+        timer: 1800,
+        showConfirmButton: false,
+      });
       setTareaEditar(null);
       return;
     }
@@ -35,6 +44,13 @@ function App() {
       descripcion: data.descripcion,
     };
     setTareas((actuales) => [...actuales, nuevaTarea]);
+    void Swal.fire({
+      icon: "success",
+      title: "Tarea creada",
+      text: `"${data.titulo}" se agregó correctamente.`,
+      timer: 1800,
+      showConfirmButton: false,
+    });
   };
 
   // TODO 2: Implementar READ
@@ -46,9 +62,27 @@ function App() {
   };
 
   // TODO 4: Implementar DELETE
-  const eliminarTarea = (id: number) => {
-    // Completar
+  const eliminarTarea = async (id: number) => {
+    const resultado = await Swal.fire({
+      title: "¿Eliminar esta tarea?",
+      text: "Esta acción no se puede deshacer.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#dc2626",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (!resultado.isConfirmed) return;
+
     setTareas((actuales) => actuales.filter((tarea) => tarea.id !== id));
+    void Swal.fire({
+      icon: "success",
+      title: "Tarea eliminada",
+      timer: 1800,
+      showConfirmButton: false,
+    });
   };
 
   // Cancelar edición
