@@ -68,6 +68,7 @@ function App() {
         </header>
 
         <TareaForm
+          key={tareaEditar?.id ?? "nueva"}
           onGuardar={guardarTarea}
           tareaEditar={tareaEditar}
           cancelarEdicion={cancelarEdicion}

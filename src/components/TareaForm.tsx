@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import type { Tarea, TareaFormData } from "../types/types";
 
@@ -18,15 +17,16 @@ export const TareaForm = ({
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<TareaFormData>();
-
-  // Cargar los datos cuando seleccionamos una tarea
-  
+  } = useForm<TareaFormData>({
+    defaultValues: {
+      titulo: tareaEditar?.titulo ?? "",
+      descripcion: tareaEditar?.descripcion ?? "",
+    },
+  });
 
   const enviarFormulario = (data: TareaFormData) => {
-    console.log(data)
     onGuardar(data);
-    
+    reset({ titulo: "", descripcion: "" });
   };
 
   return (
